@@ -19,7 +19,9 @@ val testshapeless = Project(id = "testshapeless", base = file("."))
       "com.github.julien-truffaut" %% "monocle-macro" % monocleVersion,
       "com.github.julien-truffaut" %% "monocle-state" % monocleVersion,
       "com.github.julien-truffaut" %% "monocle-refined" % monocleVersion,
-      "com.github.julien-truffaut" %% "monocle-law" % monocleVersion % "test"
+      "com.github.julien-truffaut" %% "monocle-law" % monocleVersion % "test",
+
+      "org.scalaz" %% "scalaz-core" % "7.2.0"
     ),
 
     resolvers ++= Seq(
