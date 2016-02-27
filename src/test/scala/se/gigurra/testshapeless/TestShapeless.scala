@@ -89,17 +89,9 @@ class ShapelessSpec
 
       type Result = Ok :+: ErrorType1 :+: ErrorType2 :+: CNil
 
-      def op1: Result = {
-        Coproduct(Ok())
-      }
-
-      def op2: Result = {
-        Coproduct[Result](ErrorType1())
-      }
-
-      def op3: Result = {
-        Coproduct[Result](ErrorType2())
-      }
+      def op1 = Coproduct[Result](Ok())
+      def op2 = Coproduct[Result](ErrorType1())
+      def op3 = Coproduct[Result](ErrorType2())
 
       object handler extends Poly1 {
         implicit def caseOk   = at[Ok]        (x => 1)
@@ -110,6 +102,15 @@ class ShapelessSpec
       println(op3.map(handler))
 
       op2.select[Ok]
+
+      // extrapolated from: http://stackoverflow.com/questions/34107849/pattern-matching-with-shapeless-coproduct
+      Seq(op1, op2, op3) foreach {
+        case Inl(a)           => println("These aren't")
+        case Inr(Inl(b))      => println("the droids")
+        case Inr(Inr(Inl(b))) => println("you're looking for ..")
+        case Inr(Inr(Inr(_))) => // Impossible - to make compile happy..
+      }
+
     }
 
   }
