@@ -40,7 +40,7 @@ class ShapelessSpec
       case class Person(name : String, age : Int, address : Address)
       val nameLens: Lens[Person, String]     = lens[Person] >> 'name // INTELLIJ FAILS - Reports type mismatch/Cannot deduce result
       val person = Person("Joe Grey", 37, Address("Southover Street", "Brighton", "BN2 9UA"))
-      nameLens.set(person)("123")
+      nameLens.set(person)("123") shouldBe Person("123", 37, Address("Southover Street", "Brighton", "BN2 9UA"))
     }
 
     "case class -> hlists -> case class | scala lists" in {
@@ -55,7 +55,9 @@ class ShapelessSpec
       val appleBack: Apple = appleGen.from(hlistApple)
       val scalaList: Seq[Any] = hlistApple.toList
 
+      hlistApple shouldBe (23 :: "foo" :: true :: HNil)
       apple shouldBe appleBack
+      scalaList shouldBe List(23, "foo", true)
     }
     
     "Polymorphic function values" in {
@@ -99,17 +101,19 @@ class ShapelessSpec
         implicit def caseErr2 = at[ErrorType2](x => 3)
       }
 
-      println(op3.map(handler))
-
-      op2.select[Ok]
+      op2.select[Ok] shouldBe None
+      op2.select[ErrorType1] shouldBe a[Some[_]]
 
       // extrapolated from: http://stackoverflow.com/questions/34107849/pattern-matching-with-shapeless-coproduct
+      var txt = ""
       Seq(op1, op2, op3) foreach {
-        case Inl(a)           => println("These aren't")
-        case Inr(Inl(b))      => println("the droids")
-        case Inr(Inr(Inl(b))) => println("you're looking for ..")
+        case Inl(a)           => txt += "These aren't"
+        case Inr(Inl(b))      => txt += " the droids"
+        case Inr(Inr(Inl(b))) => txt += " you're looking for .."
         case Inr(Inr(Inr(_))) => // Impossible - to make compile happy..
       }
+
+      txt shouldBe "These aren't the droids you're looking for .."
 
     }
 
