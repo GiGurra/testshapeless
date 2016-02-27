@@ -3,14 +3,13 @@ package se.gigurra.testshapeless
 import org.scalatest._
 import org.scalatest.mock._
 
-import scala.util.{Failure, Success, Try}
 import shapeless._
 
 /**
  * Examples taken from shapeless 2.0 feature list - where intellij fails miserably to analyze the code :(
  * All tests compile and work fine with sbt/scalac :S
  */
-class ShapelessSpec
+class TestShapeless
   extends WordSpec
     with MockitoSugar
     with Matchers
@@ -40,11 +39,11 @@ class ShapelessSpec
       case class Person(name : String, age : Int, address : Address)
 
       val nameLens:   Lens[Person, String]  =   lens[Person] >> 'name // INTELLIJ FAILS - Reports type mismatch/Cannot deduce result
-      val cityLens:   Lens[Person, String]  =   lens[Person].address.city // INTELLIJ FAILS - Reports type mismatch/Cannot deduce result
+      val cityLens =   lens[Person].address.city // INTELLIJ FAILS - Reports type mismatch/Cannot deduce result
 
       val person = Person("Joe Grey", 37, Address("Southover Street", "Brighton", "BN2 9UA"))
       nameLens.set(person)("123") shouldBe Person("123", 37, Address("Southover Street", "Brighton", "BN2 9UA"))
-      cityLens.set(person)("boo") shouldBe Person("Joe Grey", 37, Address("Southover Street", "boo", "BN2 9UA"))
+      cityLens.set(person)("boo") shouldBe Person("Joe Grey", 37, Address("Southover Street", "boo", "BN2 9UA"))  // INTELLIJ FAILS - Reports type mismatch/Cannot deduce result
     }
 
     "case class -> hlists -> case class | scala lists" in {

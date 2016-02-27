@@ -1,3 +1,5 @@
+val monocleVersion = "1.2.0"
+
 val testshapeless = Project(id = "testshapeless", base = file("."))
   .settings(
     organization := "se.gigurra",
@@ -7,14 +9,25 @@ val testshapeless = Project(id = "testshapeless", base = file("."))
     scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation"),
 
     libraryDependencies ++= Seq(
-      "com.chuusai" 		%% "shapeless" 		  % "2.3.0",
-      "org.scalatest"     %%  "scalatest"         %   "2.2.4"     %   "test",
-      "org.mockito"       %   "mockito-core"      %   "1.10.19"   %   "test"
+      "com.chuusai" %% "shapeless" % "2.3.0",
+      "org.scalatest" %% "scalatest" % "2.2.4" % "test",
+      "org.mockito" % "mockito-core" % "1.10.19" % "test",
+
+
+      "com.github.julien-truffaut" %% "monocle-core" % monocleVersion,
+      "com.github.julien-truffaut" %% "monocle-generic" % monocleVersion,
+      "com.github.julien-truffaut" %% "monocle-macro" % monocleVersion,
+      "com.github.julien-truffaut" %% "monocle-state" % monocleVersion,
+      "com.github.julien-truffaut" %% "monocle-refined" % monocleVersion,
+      "com.github.julien-truffaut" %% "monocle-law" % monocleVersion % "test"
     ),
 
-	resolvers ++= Seq(
-		Resolver.sonatypeRepo("releases"),
-		Resolver.sonatypeRepo("snapshots")
-	)
+    resolvers ++= Seq(
+      Resolver.sonatypeRepo("releases"),
+      Resolver.sonatypeRepo("snapshots")
+    )
+
   )
-  
+
+// for @Lenses macro support
+addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.full)
