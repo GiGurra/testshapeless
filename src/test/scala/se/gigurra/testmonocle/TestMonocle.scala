@@ -37,8 +37,7 @@ class TestMonocle
 
     "Use shortcut when making lenses!" in {
       val person = Person("Joe Grey", 37, Address("Southover Street", "Brighton", "BN2 9UA"))
-      val cityLens = Person.address + Address.city
-
+      val cityLens = Person.address > Address.city
       val uptownJoe = cityLens.modify(_.toUpperCase)(person)
       uptownJoe shouldBe Person("Joe Grey", 37, Address("Southover Street", "BRIGHTON", "BN2 9UA"))
 
@@ -47,7 +46,7 @@ class TestMonocle
   }
 
   implicit class RichLens[ObjectType, FieldType](lens: Lens[ObjectType, FieldType]) {
-    def +[NextFieldType](nextLens: Lens[FieldType, NextFieldType]) = lens composeLens nextLens
+    def >[NextFieldType](nextLens: Lens[FieldType, NextFieldType]) = lens ^|-> nextLens
   }
 
 }
