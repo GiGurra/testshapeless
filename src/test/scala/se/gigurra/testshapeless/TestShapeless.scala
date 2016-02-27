@@ -81,6 +81,37 @@ class ShapelessSpec
       println(size((1, "32")))
     }
 
+    "Coproducts as type/message constraints" in {
+
+      case class Ok()
+      case class ErrorType1()
+      case class ErrorType2()
+
+      type Result = Ok :+: ErrorType1 :+: ErrorType2 :+: CNil
+
+      def op1: Result = {
+        Coproduct(Ok())
+      }
+
+      def op2: Result = {
+        Coproduct[Result](ErrorType1())
+      }
+
+      def op3: Result = {
+        Coproduct[Result](ErrorType2())
+      }
+
+      object handler extends Poly1 {
+        implicit def caseOk   = at[Ok]        (x => 1)
+        implicit def caseErr1 = at[ErrorType1](x => 2)
+        implicit def caseErr2 = at[ErrorType2](x => 3)
+      }
+
+      println(op3.map(handler))
+
+      op2.select[Ok]
+    }
+
   }
 
 }
