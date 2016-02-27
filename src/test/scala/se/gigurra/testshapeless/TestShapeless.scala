@@ -24,7 +24,6 @@ class ShapelessSpec
       case class D1() extends Base
       case class D2() extends Base
 
-      import poly._
       val l = (23 :: "foo" :: HNil) :: HNil :: (true :: HNil) :: HNil
 
       println(l)
@@ -45,10 +44,10 @@ class ShapelessSpec
 
     "case class -> hlists -> case class | scala lists" in {
       case class Apple(i: Int, s: String, b: Boolean)
-      val appleGen = Generic[Apple]
+      val appleGen: Generic[Apple] { type Repr = Int :: String :: Boolean :: HNil } = Generic[Apple] // INTELLIJ FAILS - Reports type mismatch/Cannot deduce result
 
       val apple = Apple(23, "foo", true)
-      val hlistApple: Int :: String :: Boolean :: HNil = appleGen.to(apple) // INTELLIJ FAILS - Reports type mismatch/Cannot deduce result
+      val hlistApple: Int :: String :: Boolean :: HNil = appleGen.to(apple)
 
       println(hlistApple)
 
