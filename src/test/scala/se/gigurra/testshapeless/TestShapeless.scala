@@ -8,6 +8,7 @@ import shapeless._
 
 /**
  * Examples taken from shapeless 2.0 feature list - where intellij fails miserably to analyze the code :(
+ * All tests compile and work fine with sbt/scalac :S
  */
 class ShapelessSpec
   extends WordSpec
