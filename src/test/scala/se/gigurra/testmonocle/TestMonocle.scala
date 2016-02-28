@@ -40,7 +40,7 @@ class TestMonocle
       GenLens[Person](_.name).set("bob")(person)                  shouldBe  person.copy(name = "bob")
     }
 
-    "Use fancy LensExtender hack" in {
+    "Use fancy DirectLenses hack" in {
 
       val person = Person("Joe Grey", 37, Address("Southover Street", "Brighton", "BN2 9UA"))
 

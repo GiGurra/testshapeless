@@ -7,15 +7,26 @@ import scala.language.implicitConversions
 
 object DirectLenses {
 
-  case class Lensed[ObjectType, GenLensType <: GenLens[ObjectType]](o: ObjectType, genLens: GenLensType) {
-    def set[FieldType](fieldSelector: GenLensType => Lens[ObjectType, FieldType], v: FieldType): ObjectType = {
-      val lens = fieldSelector(genLens)
-      lens.set(v)(o)
-    }
-  }
+  implicit class LensedCaseClass[ObjectType](o: ObjectType) {
 
-  implicit def directLensSetter[ObjectType](o: ObjectType) : Lensed[ObjectType, GenLens[ObjectType]] = {
-    Lensed(o, new GenLens[ObjectType])
+    private def getLens[FieldType](fieldSelector: GenLens[ObjectType] => Lens[ObjectType, FieldType]): Lens[ObjectType, FieldType] = {
+      val genLens = GenLens[ObjectType]
+      val lens = fieldSelector(genLens)
+      lens
+    }
+
+    def set[FieldType](fieldSelector: GenLens[ObjectType] => Lens[ObjectType, FieldType], v: FieldType): ObjectType = {
+      getLens(fieldSelector).set(v)(o)
+    }
+
+    def get[FieldType](fieldSelector: GenLens[ObjectType] => Lens[ObjectType, FieldType]): FieldType = {
+      getLens(fieldSelector).get(o)
+    }
+
+    def modify[FieldType](fieldSelector: GenLens[ObjectType] => Lens[ObjectType, FieldType], f: FieldType => FieldType): ObjectType = {
+      getLens(fieldSelector).modify(f)(o)
+    }
+
   }
 
 }
