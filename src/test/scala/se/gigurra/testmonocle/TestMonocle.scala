@@ -13,7 +13,7 @@ class TestMonocle
     with Matchers
     with OneInstancePerTest {
 
-  "Monocle" should {
+  "Lens" should {
 
     @Lenses case class Address(street: String, city: String, postcode: String)
     @Lenses case class Person(name: String, age: Int, address: Address)
@@ -48,6 +48,31 @@ class TestMonocle
       person.set(_(_.name), "bob")                  shouldBe  person.copy(name = "bob")
     }
 
+  }
+
+  "Prism" should {
+
+    // Apparently, prisms are basically just a 2way subset map
+
+    "make some prisms!" in {
+      sealed trait Day
+      case object Monday extends Day
+      case object Tuesday extends Day
+      // ...
+      case object Sunday extends Day
+
+      import monocle.Prism
+
+      val _tuesday = Prism[Day, Unit]{
+        case Tuesday => Some(())
+        case _       => None
+      }(_ => Tuesday)
+
+      // The signature is
+      // -> Prism[From,To].apply(get)(reverseGet)
+      // get does From -> To
+      // reverseGet does To -> From
+    }
   }
 
 }
