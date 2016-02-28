@@ -1,5 +1,8 @@
 package se.gigurra.testmonocle
 
+/**
+  * Trick by Miles Sabin
+  */
 trait Companion[T] {
   type C <: AnyRef
   def apply() : C
