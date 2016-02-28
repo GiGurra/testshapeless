@@ -9,7 +9,6 @@ import scala.language.higherKinds
 
 class TestMonocle
   extends WordSpec
-    with MockitoSugar
     with Matchers
     with OneInstancePerTest {
 

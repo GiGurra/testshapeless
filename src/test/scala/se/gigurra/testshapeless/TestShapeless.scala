@@ -11,7 +11,6 @@ import shapeless._
  */
 class TestShapeless
   extends WordSpec
-    with MockitoSugar
     with Matchers
     with OneInstancePerTest {
 

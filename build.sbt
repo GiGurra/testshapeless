@@ -1,5 +1,3 @@
-val monocleVersion = "1.2.0"
-
 val testshapeless = Project(id = "testshapeless", base = file("."))
   .settings(
     organization := "se.gigurra",
@@ -9,16 +7,26 @@ val testshapeless = Project(id = "testshapeless", base = file("."))
     scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation"),
 
     libraryDependencies ++= Seq(
+
+      // Shapeless
       "com.chuusai" %% "shapeless" % "2.3.0",
-      "org.scalatest" %% "scalatest" % "2.2.4" % "test",
-      "org.mockito" % "mockito-core" % "1.10.19" % "test",
 
+      // Scalaz
+      "org.scalaz" %% "scalaz-core" % "7.2.0",
 
-      "com.github.julien-truffaut" %% "monocle-core" % monocleVersion,
-      "com.github.julien-truffaut" %% "monocle-generic" % monocleVersion,
-      "com.github.julien-truffaut" %% "monocle-macro" % monocleVersion,
+      // Cats
+      "org.typelevel" %% "cats" % "0.4.1",
 
-      "org.scalaz" %% "scalaz-core" % "7.2.0"
+      // Monocle (Uses scalaz)
+      "com.github.julien-truffaut" %% "monocle-core" % "1.2.0",
+      "com.github.julien-truffaut" %% "monocle-generic" % "1.2.0",
+      "com.github.julien-truffaut" %% "monocle-macro" % "1.2.0",
+
+      // Simulacrum (part of cats)
+      "com.github.mpilquist" %% "simulacrum" % "0.7.0",
+
+      // Test frameworks
+      "org.scalatest" %% "scalatest" % "2.2.4" % "test"
     ),
 
     resolvers ++= Seq(
