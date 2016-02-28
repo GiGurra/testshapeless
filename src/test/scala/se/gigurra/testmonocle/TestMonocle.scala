@@ -4,6 +4,7 @@ import monocle.Lens
 import monocle.macros.Lenses
 import org.scalatest._
 import org.scalatest.mock._
+import DirectLenses._
 
 import scala.language.higherKinds
 
@@ -15,8 +16,8 @@ class TestMonocle
 
   "Monocle" should {
 
-    @Lenses case class Address(street : String, city : String, postcode : String)
-    @Lenses case class Person(name : String, age : Int, address : Address)
+    @Lenses case class Address(street: String, city: String, postcode: String)
+    @Lenses case class Person(name: String, age: Int, address: Address)
 
     "make some lenses!" in {
 
@@ -32,6 +33,14 @@ class TestMonocle
 
     }
 
+    "Use fancy LensExtender hack" in {
+
+      val person = Person("Joe Grey", 37, Address("Southover Street", "Brighton", "BN2 9UA"))
+
+      person.set(_(_.address.city), "springfield")  shouldBe  person.copy(address = person.address.copy(city = "springfield"))
+      person.set(_(_.name), "bob")                  shouldBe  person.copy(name = "bob")
+    }
+
     "Use shortcut when making lenses!" in {
 
       implicit class RichLens[ObjectType, FieldType](lens: Lens[ObjectType, FieldType]) {
@@ -42,50 +51,6 @@ class TestMonocle
       val cityLens = Person.address > Address.city
       val uptownJoe = cityLens.modify(_.toUpperCase)(person)
       uptownJoe shouldBe Person("Joe Grey", 37, Address("Southover Street", "BRIGHTON", "BN2 9UA"))
-
-    }
-
-    "Use fancy LensExtender hack - available if companion objects were easy to summon :(" in {
-      import LensExtender._
-
-      @Lenses case class Nested(foo : String)
-      @Lenses case class Address2(street : String, city : String, postcode : String, e: Nested)
-      @Lenses case class Person2(name : String, age : Int, address : Address2)
-
-      // If these could be generated with macros..
-      object Address2 {
-        implicit def aComp = new Companion[Address2] {
-          type C = Address2.type
-          def apply() = Address2
-        }
-      }
-      object Person2 {
-        implicit def pComp = new Companion[Person2] {
-          type C = Person2.type
-          def apply() = Person2
-        }
-      }
-      object Nested {
-        implicit def pComp = new Companion[Nested] {
-          type C = Nested.type
-          def apply() = Nested
-        }
-      }
-
-      val person = Person2("Joe Grey", 37, Address2("Southover Street", "Brighton", "BN2 9UA", Nested("123")))
-
-      // Then we could do this!
-      val fooLens = Person2.address(_.e(_.foo))
-      fooLens.set("lalala")(person) shouldBe Person2("Joe Grey", 37, Address2("Southover Street", "Brighton", "BN2 9UA", Nested("lalala")))
-
-      // --> Or even this! <--
-      val p1 = person.set(_.name, "123")
-      val p2 = person.set(_.address(_.city), "dumbletown")
-      val p3 = person.set(_.address(_.e(_.foo)), "eeee")
-
-      p1 shouldBe Person2("123", 37, Address2("Southover Street", "Brighton", "BN2 9UA", Nested("123")))
-      p2 shouldBe Person2("Joe Grey", 37, Address2("Southover Street", "dumbletown", "BN2 9UA", Nested("123")))
-      p3 shouldBe Person2("Joe Grey", 37, Address2("Southover Street", "Brighton", "BN2 9UA", Nested("eeee")))
 
     }
 
