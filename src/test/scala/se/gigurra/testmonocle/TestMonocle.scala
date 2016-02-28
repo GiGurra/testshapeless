@@ -1,7 +1,7 @@
 package se.gigurra.testmonocle
 
 import monocle.Lens
-import monocle.macros.Lenses
+import monocle.macros.{GenLens, Lenses}
 import org.scalatest._
 import org.scalatest.mock._
 import DirectLenses._
@@ -31,6 +31,14 @@ class TestMonocle
       truncatedJoe shouldBe Person("Joe G", 37, Address("Southover Street", "Brighton", "BN2 9UA"))
       uptownJoe shouldBe Person("Joe Grey", 37, Address("Southover Street", "BRIGHTON", "BN2 9UA"))
 
+    }
+
+    "Use GenLens" in {
+
+      val person = Person("Joe Grey", 37, Address("Southover Street", "Brighton", "BN2 9UA"))
+
+      GenLens[Person](_.address.city).set("springfield")(person)  shouldBe  person.copy(address = person.address.copy(city = "springfield"))
+      GenLens[Person](_.name).set("bob")(person)                  shouldBe  person.copy(name = "bob")
     }
 
     "Use fancy LensExtender hack" in {
