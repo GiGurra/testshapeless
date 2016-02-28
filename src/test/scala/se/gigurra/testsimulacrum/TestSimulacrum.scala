@@ -7,6 +7,8 @@ import scala.language.higherKinds
 import scala.language.implicitConversions
 
 /**
+  * Make sure you first understand https://www.youtube.com/watch?v=sVMES4RZF-8 100% (30 minute tutorial on type classes)
+  *
   * This is actually part of Cats,
   * -> but may be imported separately
   */
