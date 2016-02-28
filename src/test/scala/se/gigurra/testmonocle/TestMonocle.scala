@@ -1,10 +1,9 @@
 package se.gigurra.testmonocle
 
-import monocle.Lens
 import monocle.macros.{GenLens, Lenses}
 import org.scalatest._
 import org.scalatest.mock._
-import DirectLenses._
+import se.gigurra.testmonocle.DirectLenses._
 
 import scala.language.higherKinds
 
