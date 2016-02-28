@@ -6,6 +6,10 @@ import simulacrum._
 import scala.language.higherKinds
 import scala.language.implicitConversions
 
+/**
+  * This is actually part of Cats,
+  * -> but may be imported separately
+  */
 class TestSimulacrum
   extends WordSpec
     with Matchers
@@ -13,7 +17,7 @@ class TestSimulacrum
 
   "Simulacrum" should {
 
-    "make type class creation easier #2" in {
+    "make type class creation easier" in {
 
       case class Vector(x: Int, y: Int)
       implicit def tuple2Vector(t: (Int, Int)): Vector = (Vector.apply _).tupled(t)
