@@ -72,11 +72,16 @@ class TestMonocle
         }
       }
 
+      val person = Person2("Joe Grey", 37, Address2("Southover Street", "Brighton", "BN2 9UA", Nested("123")))
+
       // Then we could do this!
-      val p0 = Person2("Joe Grey", 37, Address2("Southover Street", "Brighton", "BN2 9UA", Nested("123")))
-      val p1 = p0.set(_.name, "123")
-      val p2 = p0.set(_.address(_.city), "dumbletown")
-      val p3 = p0.set(_.address(_.e(_.foo)), "eeee")
+      val fooLens = Person2.address(_.e(_.foo))
+      fooLens.set("lalala")(person) shouldBe Person2("Joe Grey", 37, Address2("Southover Street", "Brighton", "BN2 9UA", Nested("lalala")))
+
+      // --> Or even this! <--
+      val p1 = person.set(_.name, "123")
+      val p2 = person.set(_.address(_.city), "dumbletown")
+      val p3 = person.set(_.address(_.e(_.foo)), "eeee")
 
       p1 shouldBe Person2("123", 37, Address2("Southover Street", "Brighton", "BN2 9UA", Nested("123")))
       p2 shouldBe Person2("Joe Grey", 37, Address2("Southover Street", "dumbletown", "BN2 9UA", Nested("123")))
