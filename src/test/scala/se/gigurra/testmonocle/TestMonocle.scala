@@ -13,9 +13,6 @@ class TestMonocle
     with Matchers
     with OneInstancePerTest {
 
-  /**
-    * This is awesome! :)
-    */
   "Monocle" should {
 
     @Lenses case class Address(street : String, city : String, postcode : String)
@@ -52,7 +49,7 @@ class TestMonocle
       import LensExtender._
 
       @Lenses case class Nested(foo : String)
-      @Lenses case class Address2(street : String, city : String, postcode : String, e: Nested = Nested("123"))
+      @Lenses case class Address2(street : String, city : String, postcode : String, e: Nested)
       @Lenses case class Person2(name : String, age : Int, address : Address2)
 
       // If these could be generated with macros..
@@ -76,13 +73,13 @@ class TestMonocle
       }
 
       // Then we could do this!
-      val p0 = Person2("Joe Grey", 37, Address2("Southover Street", "Brighton", "BN2 9UA"))
+      val p0 = Person2("Joe Grey", 37, Address2("Southover Street", "Brighton", "BN2 9UA", Nested("123")))
       val p1 = p0.set(_.name, "123")
       val p2 = p0.set(_.address(_.city), "dumbletown")
       val p3 = p0.set(_.address(_.e(_.foo)), "eeee")
 
-      p1 shouldBe Person2("123", 37, Address2("Southover Street", "Brighton", "BN2 9UA"))
-      p2 shouldBe Person2("Joe Grey", 37, Address2("Southover Street", "dumbletown", "BN2 9UA"))
+      p1 shouldBe Person2("123", 37, Address2("Southover Street", "Brighton", "BN2 9UA", Nested("123")))
+      p2 shouldBe Person2("Joe Grey", 37, Address2("Southover Street", "dumbletown", "BN2 9UA", Nested("123")))
       p3 shouldBe Person2("Joe Grey", 37, Address2("Southover Street", "Brighton", "BN2 9UA", Nested("eeee")))
 
     }
